@@ -29,3 +29,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Brinquedo</title>
+</head>
+<body>
+    <h2>Editar Brinquedo</h2>
+    <form method="POST" action="">
+        <label for="categoria">Categoria:</label>
+        <input type="text" id="categoria" name="categoria" value="<?php echo $brinquedo['categoria']; ?>" required><br><br>
+
+        <label for="faixa_etaria">Faixa Etária:</label>
+        <input type="number" id="faixa_etaria" name="faixa_etaria" value="<?php echo $brinquedo['faixa_etaria']; ?>" required><br><br>
+
+        <label for="preco">Preço:</label>
+        <input type="number" step="0.01" id="preco" name="preco" value="<?php echo $brinquedo['preco']; ?>" required><br><br>
+
+        <label for="quantidade">Quantidade:</label>
+        <input type="number" id="quantidade" name="quantidade" value="<?php echo $brinquedo['quantidade']; ?>" required><br><br>
+
+        <button type="submit">Atualizar</button>
+    </form>
+    <br>
+    <button type="button" onclick="window.location.href='../index.php'">Voltar</button>
+    </body>
+</html>
+
