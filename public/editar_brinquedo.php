@@ -2,13 +2,20 @@
 
 include '../infra/conexao.php';
 
+if (!isset($_GET['id'])) {
+    die("ID não informado.");
+}
 $id = $_GET['id'];
 
 $sql = "SELECT * FROM brinquedos WHERE id = ?";
-$result = $conexao->prepare($sql);
+$stmt = $conexao->prepare($sql);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$result = $stmt->get_result();
 $brinquedo = $result->fetch_assoc();
+$stmt->close();
 
-if(!$brinquedo) {
+if (!$brinquedo) {
     die("Brinquedo não encontrado.");
 }
 
@@ -18,14 +25,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $preco = $_POST["preco"];
     $quantidade = $_POST["quantidade"];
 
-    $sql = "UPDATE brinquedos SET categoria = '$categoria', faixa_etaria = '$faixa_etaria', preco = '$preco', quantidade = '$quantidade' WHERE id = '$id'";
+    $sql = "UPDATE brinquedos SET categoria = ?, faixa_etaria = ?, preco = ?, quantidade = ? WHERE id = ?";
+    $stmt2 = $conexao->prepare($sql);
+    $stmt2->bind_param("sidii", $categoria, $faixa_etaria, $preco, $quantidade, $id);
 
-     if ($conn->query($sql) === TRUE) {
+    if ($stmt2->execute()) {
         header("Location: ../index.php");
         exit;
     } else {
-        echo "Erro: " . $sql . "<br>" . $conn->error;
+        echo "Erro ao atualizar brinquedo: " . $stmt2->error;
     }
+
+    $stmt2->close();
 }
 ?>
 
@@ -40,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <h2>Editar Brinquedo</h2>
     <form method="POST" action="">
         <label for="categoria">Categoria:</label>
-        <input type="text" id="categoria" name="categoria" value="<?php echo $brinquedo['categoria']; ?>" required><br><br>
+        <input type="text" id="categoria" name="categoria" value="<?php echo htmlspecialchars($brinquedo['categoria']); ?>" required><br><br>
 
         <label for="faixa_etaria">Faixa Etária:</label>
         <input type="number" id="faixa_etaria" name="faixa_etaria" value="<?php echo $brinquedo['faixa_etaria']; ?>" required><br><br>
@@ -55,6 +66,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </form>
     <br>
     <button type="button" onclick="window.location.href='../index.php'">Voltar</button>
-    </body>
+</body>
 </html>
-

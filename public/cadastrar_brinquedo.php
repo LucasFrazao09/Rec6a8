@@ -47,6 +47,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <button type="submit">Cadastrar</button>
     </form>
         <br>
-        <button onclick="window.location.href='listar_brinquedos.php'">Voltar</button>
+        <button onclick="window.location.href='../index.php'">Voltar</button>
 </body>
 </html>
